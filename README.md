@@ -1,2 +1,2 @@
-# SistemaLoginCadastro-php
-Sistema de login e cadastro desenvolvido com php.
+# SistemaLoginCadastro
+Sistema de login e cadastro desenvolvido com html,css,php e mysql.
