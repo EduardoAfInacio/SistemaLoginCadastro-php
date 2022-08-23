@@ -8,6 +8,7 @@ if(isset($_POST['nome']) && isset($_POST['email']) && isset($_POST['senha']) && 
         $nome = limpaDado($_POST['nome']);
         $email = limpaDado($_POST['email']);
         $senha = limpaDado($_POST['senha']);
+        $senhaCripto = sha1($senha); 
         $senhaRepet = limpaDado($_POST['senhaRepet']);
         $check = limpaDado($_POST['check']);
 
@@ -32,7 +33,21 @@ if(isset($_POST['nome']) && isset($_POST['email']) && isset($_POST['senha']) && 
         }
 
         if(!isset($erroNome) && !isset($erroEmail) && !isset($erroSenha) && !isset($erroSenhaRepet) && !isset($erroCheck)){
-            //checar banco e inserir no mesmo logo após...
+            $sql = $pdo->prepare("SELECT * FROM usuarios WHERE email=? LIMIT 1");
+            $sql->execute(array($email));
+            $usuario = $sql->fetch();
+            if(!$usuario){
+                $recupera_senha = '';
+                $token = '';
+                $status = 'novo';
+                $dataCadastro = date('d/m/Y');
+                $sql = $pdo->prepare("INSERT INTO usuarios VALUES(null, ?,?,?,?,?,?,?)");
+                if($sql->execute(array($nome,$email,$senhaCripto,$recupera_senha,$token,$status,$dataCadastro))){
+                    header('location: index.php?resultado=Usuário cadastrado com sucesso!');
+                }
+            }else{
+                $erroGlobal = 'Já existe um cadastro com esse e-mail.';
+            }
         }
     }
 

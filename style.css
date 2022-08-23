@@ -125,3 +125,17 @@ label{
     margin-bottom: 10px;
     font-weight: bold;
 }
+
+.cadastroBemSucedido{
+    text-align: center;
+    color: white;
+    font-weight: bold;
+    border-radius: 5px;
+    padding: 7px;
+    margin-bottom: 10px;
+    width: 70%;
+    background-color: rgb(21, 143, 48);
+
+}
+
+
