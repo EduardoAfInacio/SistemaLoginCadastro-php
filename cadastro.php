@@ -30,6 +30,10 @@ if(isset($_POST['nome']) && isset($_POST['email']) && isset($_POST['senha']) && 
         if($check!=='ok') {
             $erroCheck = "Aceite os termos de uso.";
         }
+
+        if(!isset($erroNome) && !isset($erroEmail) && !isset($erroSenha) && !isset($erroSenhaRepet) && !isset($erroCheck)){
+            //checar banco e inserir no mesmo logo após...
+        }
     }
 
 }
@@ -57,22 +61,22 @@ if(isset($_POST['nome']) && isset($_POST['email']) && isset($_POST['senha']) && 
         <?php } ?> 
         <div class="inputGroup">
             <img class='inputIcon' src="img/social-media.png">
-            <input <?php if(isset($erroGlobal) or isset($erroNome)){echo 'class="erroInput"';} ?> name='nome' type="text" placeholder="Digite seu nome completo" required>
+            <input <?php if(isset($erroGlobal) or isset($erroNome)){echo 'class="erroInput"';} ?> name='nome' type="text" placeholder="Digite seu nome completo" required <?php if(isset($_POST['nome'])){echo "value='".$_POST['nome']."'";} ?>>
             <?php if(isset($erroNome)) {echo '<div class="erro">Insira um nome correto.</div>';} ?>
         </div>
         <div class="inputGroup">
             <img class='inputIcon' src="img/pass.png">
-            <input <?php if(isset($erroGlobal) or isset($erroEmail)){echo 'class="erroInput"';} ?> name='email' type="text" placeholder="Digite seu email" required>
+            <input <?php if(isset($erroGlobal) or isset($erroEmail)){echo 'class="erroInput"';} ?> name='email' type="text" placeholder="Digite seu email" required <?php if(isset($_POST['email'])){echo "value='".$_POST['email']."'";} ?>>
             <?php if(isset($erroEmail)) {echo '<div class="erro">Insira um e-mail correto.</div>';} ?>
         </div>
         <div class="inputGroup">
             <img class='inputIcon' src="img/web-browser.png">
-            <input <?php if(isset($erroGlobal) or isset($erroSenha)){echo 'class="erroInput"';} ?> name="senha" type="password" placeholder="Digite sua senha" required>
+            <input <?php if(isset($erroGlobal) or isset($erroSenha)){echo 'class="erroInput"';} ?> name="senha" type="password" placeholder="Digite sua senha" required <?php if(isset($_POST['senha'])){echo "value='".$_POST['senha']."'";} ?>>
             <?php if(isset($erroSenha)) {echo '<div class="erro">Insira uma senha válida.</div>';} ?>
         </div>
         <div class="inputGroup">
             <img class='inputIcon' src="img/password.png">
-            <input <?php if(isset($erroGlobal) or isset($erroSenhaRepet)){echo 'class="erroInput"';} ?> name="senhaRepet" type="password" placeholder="Digite sua senha novamente." required>
+            <input <?php if(isset($erroGlobal) or isset($erroSenhaRepet)){echo 'class="erroInput"';} ?> name="senhaRepet" type="password" placeholder="Digite sua senha novamente." required <?php if(isset($_POST['senhaRepet'])){echo "value='".$_POST['senhaRepet']."'";} ?>>
             <?php if(isset($erroSenhaRepet)) {echo '<div class="erro">A senha não é a mesma.</div>';} ?>
         </div>
         <div <?php if(isset($erroGlobal) or isset($erroCheck)){echo 'class="inputGroup erroInput"';}else{echo 'class="inputGroup"';}?>>
