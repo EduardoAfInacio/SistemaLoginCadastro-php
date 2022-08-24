@@ -1,4 +1,7 @@
 <?php
+
+use PHPMailer\PHPMailer\PHPMailer;
+
 require('db/conexaoDb.php');
 
 if(isset($_POST['nome']) && isset($_POST['email']) && isset($_POST['senha']) && isset($_POST['senhaRepet'])){
@@ -39,11 +42,35 @@ if(isset($_POST['nome']) && isset($_POST['email']) && isset($_POST['senha']) && 
             if(!$usuario){
                 $recupera_senha = '';
                 $token = '';
+                $codConfirmacao = uniqid();
                 $status = 'novo';
                 $dataCadastro = date('d/m/Y');
-                $sql = $pdo->prepare("INSERT INTO usuarios VALUES(null, ?,?,?,?,?,?,?)");
-                if($sql->execute(array($nome,$email,$senhaCripto,$recupera_senha,$token,$status,$dataCadastro))){
-                    header('location: index.php?resultado=Usuário cadastrado com sucesso!');
+                $sql = $pdo->prepare("INSERT INTO usuarios VALUES(null, ?,?,?,?,?,?,?,?)");
+                if($sql->execute(array($nome,$email,$senhaCripto,$recupera_senha,$token,$codConfirmacao,$status,$dataCadastro))){
+                    if($modo=='local'){
+                        header('location: index.php?resultado=Usuário cadastrado com sucesso!');
+                        //APÓS CADASTRAR EM MODO LOCAL, É NECESSÁRIO TROCAR MANUALMENTE O STATUS PARA CONFIRMADO NO BANCO DE DADOS PARA REALIZAR O LOGIN POSTERIORMENTE.
+                    }
+                    if($modo=='publico'){
+                        $email == new PHPMailer(true);
+                        try{
+                            $mail->setFrom('sistema@emailsistema.com', 'Sistema de login');
+                            $mail->addAddress($email,$nome); 
+
+                            $mail->isHTML(true);                                 
+                            $mail->Subject = 'Confirmação de cadastro.';
+                            $mail->Body = '<h1>Confirme seu email cadastrado abaixo:</h1><br><br><a style="background:green; color=white; padding:10px; border-radius:10px; text-decoration:none;" href="https:sistema.com.br/confirmacao.php?codConfirmacao='.$codConfirmacao.'">Confirmar E-mail';
+                            //MUDE INFORMAÇÕES PARA AS DE SEU SITE ONDE O SISTEMA ESTÁ HOSPEDADO CASO O MODO SEJA PÚBLICO
+                            // --->>  https:sistema.com.br
+                            // --->>  sistema@emailsistema.com
+
+                            $mail->send();
+                            header('location: cadastrado.html');
+
+                        }catch (Exception $e){
+                            echo "Houve um problema ao enviar o email de confirmação: {$mail->ErrorInfo}";
+                        }
+                    }
                 }
             }else{
                 $erroGlobal = 'Já existe um cadastro com esse e-mail.';
@@ -99,7 +126,7 @@ if(isset($_POST['nome']) && isset($_POST['email']) && isset($_POST['senha']) && 
             <label for="termos">Você concorda com a <a href="#" class="link">política de privacidade</a> e os <a
                     href="#" class="link">termos de uso?</a></label>
         </div>
-        <button type="submit" class="btn-green">Realizar cadastro</button>
+        <button type="submit" class="btn-green">Finalizar cadastro</button>
         <a href="index.php">Já possuo uma conta.</a>
     </form>
 

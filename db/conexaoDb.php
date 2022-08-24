@@ -1,6 +1,13 @@
 <?php
-
+session_start();
 $modo = 'local';
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+require 'PHPMailer/src/Exception.php';
+require 'PHPMailer/src/PHPMailer.php';
+require 'PHPMailer/src/SMTP.php';
 
 if($modo=='local'){
     $servidor = 'localhost';
@@ -8,7 +15,7 @@ if($modo=='local'){
     $senha = '';
     $banco = 'login';
 
-}elseif($modo=='producao'){
+}elseif($modo=='publico'){
     $servidor ='';
     $usuario = '';
     $senha = '';
@@ -19,6 +26,7 @@ if($modo=='local'){
 try{
     $pdo = new PDO("mysql:host=$servidor;dbname=$banco",$usuario,$senha);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    
 }catch(PDOException $erro){
     echo "A conexão com o banco falhou.";
 
@@ -29,4 +37,16 @@ function limpaDado($dado){
     $dado = stripslashes($dado);
     $dado = htmlspecialchars($dado);
     return $dado;
+}
+
+function autorizacao($tokenSession){
+    global $pdo;
+    $sql = $pdo->prepare('SELECT * FROM usuarios WHERE token=? LIMIT 1');
+    $sql->execute(array($tokenSession));
+    $usuario = $sql->fetch(PDO::FETCH_ASSOC);
+    if(!$usuario){
+        return false;
+    }else{
+        return $usuario;
+    }
 }

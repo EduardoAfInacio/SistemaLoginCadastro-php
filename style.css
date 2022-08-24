@@ -138,4 +138,12 @@ label{
 
 }
 
+.btn-logout{
+    background: #008031;
+    padding: 10px;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 10px;
+}
+
 
