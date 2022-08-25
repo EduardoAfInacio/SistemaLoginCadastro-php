@@ -27,8 +27,6 @@ if (isset($_POST['email']) && isset($_POST['senha']) && !empty($_POST['email']) 
 }
   
 
-
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -44,6 +42,7 @@ if (isset($_POST['email']) && isset($_POST['senha']) && !empty($_POST['email']) 
     <form method="POST">
         <h1>Login</h1>
         <?php if(isset($_GET['resultado']) && $_GET['resultado']=='Usuário cadastrado com sucesso!'){ echo '<div class="cadastroBemSucedido animate__animated animate__wobble">Usuário cadastrado com sucesso!</div>';} ?>
+        <?php if(isset($_GET['resultadoRecuperacao']) && $_GET['resultadoRecuperacao']=='Senha redefinida com sucesso!'){ echo '<div class="recuperacaoBemSucedida animate__animated animate__wobble">Senha redefinida com sucesso!</div>';} ?>
         <?php if(isset($erroLogin)){ ?>
             <div class="erroGlobal animate__animated animate__wobble">
             <?php echo $erroLogin; ?>
@@ -58,14 +57,24 @@ if (isset($_POST['email']) && isset($_POST['senha']) && !empty($_POST['email']) 
             <img class='inputIcon' src="img/unlock.png">
             <input type="password" name='senha' placeholder="Digite sua senha" required>
         </div>
+        <a href="esqueciSenha.php">Esqueceu a senha?</a>
         <button type="submit" class="btn-green">Fazer Login</button>
-        <a href="cadastro.php">Não possui cadastro? Clique aqui.</a>
+        <a href="cadastro.php">Não possui cadastro?</a>
     </form>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <?php if(isset($_GET['resultado']) && $_GET['resultado']=='Usuário cadastrado com sucesso!'){?>
     <script>
         setTimeout(() => {
             $('.cadastroBemSucedido').hide();
+        }, 3000);
+    </script>
+
+
+<?php } ?>
+<?php if(isset($_GET['resultadoRecuperacao']) && $_GET['resultadoRecuperacao']=='Senha redefinida com sucesso!'){?>
+    <script>
+        setTimeout(() => {
+            $('.recuperacaoBemSucedida').hide();
         }, 3000);
     </script>
 

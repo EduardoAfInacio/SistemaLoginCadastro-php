@@ -1,8 +1,14 @@
 <?php
 
-use PHPMailer\PHPMailer\PHPMailer;
-
 require('db/conexaoDb.php');
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+require 'db/PHPMailer/src/Exception.php';
+require 'db/PHPMailer/src/PHPMailer.php';
+require 'db/PHPMailer/src/SMTP.php';
+
 
 if(isset($_POST['nome']) && isset($_POST['email']) && isset($_POST['senha']) && isset($_POST['senhaRepet'])){
     if(empty($_POST['nome']) or empty($_POST['email']) or empty($_POST['senha']) or empty($_POST['senhaRepet'])){
@@ -52,7 +58,7 @@ if(isset($_POST['nome']) && isset($_POST['email']) && isset($_POST['senha']) && 
                         //APÓS CADASTRAR EM MODO LOCAL, É NECESSÁRIO TROCAR MANUALMENTE O STATUS PARA CONFIRMADO NO BANCO DE DADOS PARA REALIZAR O LOGIN POSTERIORMENTE.
                     }
                     if($modo=='publico'){
-                        $email == new PHPMailer(true);
+                        $mail = new PHPMailer(true);
                         try{
                             $mail->setFrom('sistema@emailsistema.com', 'Sistema de login');
                             $mail->addAddress($email,$nome); 
@@ -65,10 +71,10 @@ if(isset($_POST['nome']) && isset($_POST['email']) && isset($_POST['senha']) && 
                             // --->>  sistema@emailsistema.com
 
                             $mail->send();
-                            header('location: cadastrado.html');
+                            header('location:cadastrado.html');
 
                         }catch (Exception $e){
-                            echo "Houve um problema ao enviar o email de confirmação: {$mail->ErrorInfo}";
+                            $erroGlobal = "Erro ao enviar o e-mail.";
                         }
                     }
                 }
@@ -114,7 +120,7 @@ if(isset($_POST['nome']) && isset($_POST['email']) && isset($_POST['senha']) && 
         <div class="inputGroup">
             <img class='inputIcon' src="img/web-browser.png">
             <input <?php if(isset($erroGlobal) or isset($erroSenha)){echo 'class="erroInput"';} ?> name="senha" type="password" placeholder="Digite sua senha" required <?php if(isset($_POST['senha'])){echo "value='".$_POST['senha']."'";} ?>>
-            <?php if(isset($erroSenha)) {echo '<div class="erro">Insira uma senha válida.</div>';} ?>
+            <?php if(isset($erroSenha)) {echo '<div class="erro">Senha com no mínimo 6 digitos.</div>';} ?>
         </div>
         <div class="inputGroup">
             <img class='inputIcon' src="img/password.png">
