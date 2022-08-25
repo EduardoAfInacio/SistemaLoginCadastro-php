@@ -1,5 +1,5 @@
 # SistemaLoginCadastro
-Sistema de login e cadastro desenvolvido com html,css, um pouco de js, php e mysql.
+Sistema de login e cadastro desenvolvido utilizando php e mysql.
 
 <h1>NOTAS</h1>
 
